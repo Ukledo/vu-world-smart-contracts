@@ -1,0 +1,41 @@
+{
+    "name": "vu-world-smart-contracts",
+    "version": "0.0.1",
+    "description": "VU Worls Smart Contracts",
+    "main": "truffle.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "truffle test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Ukledo/vu-world-smart-contracts.git"
+    },
+    "keywords": [
+        "VU",
+        "Ukledo",
+        "Ethereum",
+        "Smart",
+        "Contracts"
+    ],
+    "author": "Illusionweaver VU Devteam",
+    "license": "AGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/Ukledo/vu-world-smart-contracts/issues"
+    },
+    "homepage": "https://github.com/Ukledo/vu-world-smart-contracts#readme",
+    "dependencies": {
+        "ganache-cli": "6.1.3",
+        "truffle": "4.1.11",
+        "abi-decoder": "^1.0.9"
+    },
+    "devDependencies": {
+        "babel-polyfill": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-flow": "^6.23.0",
+        "babel-register": "^6.26.0",
+        "solidity-coverage": "^0.5.4"
+    }
+}
