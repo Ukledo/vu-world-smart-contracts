@@ -1,6 +1,6 @@
 const VUItemToken = artifacts.require("VUItemToken");
 const VUSwap = artifacts.require("VUSwap");
-const VUToken = artifacts.require("VUToken");
+const VUToken = artifacts.require("VUTokenMock");
 
 const utils = require('./helpers/utils');
 const Reverter = require('./helpers/reverter');

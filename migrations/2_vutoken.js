@@ -1,4 +1,4 @@
-var VUToken = artifacts.require("VUToken")
+var VUToken = artifacts.require("VUTokenMock")
 
 module.exports = (deployer, network) => {
 	deployer.then(async () => {
