@@ -11,6 +11,8 @@ const util = require("ethereumjs-util");
 contract('VUSwap', function (accounts) {
     const reverter = new Reverter(web3);
 
+    const OK = 1;
+
     const owner = accounts[0];
     const middleware = accounts[1];
     const user1 = accounts[2];
@@ -239,6 +241,83 @@ contract('VUSwap', function (accounts) {
             assert.equal(await vuItemToken.ownerOf(item2ID), user2);
 
             assert.isTrue((await vuToken.balanceOf(user2)).isZero());
+        })
+
+        after(async () => {
+            await reverter.revert()
+        })
+    });
+
+    context("User2 (as a taker) can cancel order", async () => {
+        const item1ID = 1;
+        const item2ID = 2;
+        const VU_TOKEN_AMOUNT = 100;
+        let order = {};
+
+        before(async () => {
+            await vuToken.transfer(user2, VU_TOKEN_AMOUNT);
+            await vuToken.approve(vuSwap.address, VU_TOKEN_AMOUNT, {from: user2});
+
+            await vuItemToken.massMint(user1, [item1ID, item2ID], ["uri1", "uri2"]);
+            await vuItemToken.setApprovalForAll(vuSwap.address, true, {from: user1});
+
+            assert.equal(await vuItemToken.ownerOf(item1ID), user1);
+            assert.equal(await vuItemToken.ownerOf(item2ID), user1);
+            assert.isTrue((await vuToken.balanceOf(user2)).gte(VU_TOKEN_AMOUNT));
+
+            order.maker = user2;
+            order.makerToken = vuToken.address;
+            order.makerReceiver = user2;
+            order.makerValues = [VU_TOKEN_AMOUNT];
+            order.taker = user1;
+            order.takerToken = vuItemToken.address;
+            order.takerValues = [item1ID, item2ID];
+            order.expiration = new Date().getTime() + 60000;
+            order.nonce = 1;
+        })
+
+        it(`User2 can cancel an order`, async () => {
+            const { v, r, s } = await signature(order, user2);
+            let addresses = [order.maker, order.makerToken, order.makerReceiver, order.taker, order.takerToken];
+            await vuSwap.cancel(addresses,
+                              order.makerValues,
+                              order.takerValues,
+                              order.expiration,
+                              order.nonce,
+                              v, util.bufferToHex(r), util.bufferToHex(s), {from: user2});
+
+            assert.isTrue(await vuSwap.fills(await orderHash(order)));
+        })
+
+        it(`User1 is unable to fill cancelled order`, async () => {
+            const { v, r, s } = await signature(order, user2);
+            let addresses = [order.maker, order.makerToken, order.makerReceiver, order.taker, order.takerToken];
+            let result = await vuSwap.fill.call(addresses,
+                                                order.makerValues,
+                                                order.takerValues,
+                                                order.expiration,
+                                                order.nonce,
+                                                v, util.bufferToHex(r), util.bufferToHex(s), {from: user1});
+
+            assert.notEqual(result, OK);
+
+            await vuSwap.fill.call(addresses,
+                                   order.makerValues,
+                                   order.takerValues,
+                                   order.expiration,
+                                   order.nonce,
+                                   v, util.bufferToHex(r), util.bufferToHex(s), {from: user1});
+        })
+
+        it(`User1 should be an owner of [${item1ID}, ${item2ID}] VU Items`, async () => {
+            assert.equal(await vuItemToken.ownerOf(item1ID), user1);
+            assert.equal(await vuItemToken.ownerOf(item2ID), user1);
+
+            assert.isTrue((await vuToken.balanceOf(user1)).isZero());
+        })
+
+        it(`User2's balance of VU should be unchanged and equal ${VU_TOKEN_AMOUNT}`, async () => {
+            assert.isTrue((await vuToken.balanceOf(user2)).eq(VU_TOKEN_AMOUNT));
         })
 
         after(async () => {

@@ -20,8 +20,10 @@ contract VUSwap is HasNoEther, HasNoTokens {
     uint constant ERROR_EXPIRED = 1004;
     /// @dev This order has already been filled
     uint constant ERROR_INVALID_TAKER = 1005;
+    /// @dev This order has already been filled
+    uint constant ERROR_INVALID_MAKER = 1006;
     /// @dev Order has already been cancelled or filled
-    uint constant ERROR_INVALID_FILL = 1006;
+    uint constant ERROR_INVALID_FILL = 1007;
 
     /// @dev Mapping of order hash to bool (true = already filled).
     mapping (bytes32 => bool) public fills;
@@ -77,8 +79,14 @@ contract VUSwap is HasNoEther, HasNoTokens {
         uint expiration,
         uint nonce,
         uint8 v, bytes32 r, bytes32 s)
+    public
     returns (uint)
     {
+        // Only sender is permited to fill an order
+        if (addresses[3] /*taker*/ != msg.sender) {
+            return ERROR_INVALID_TAKER;
+        }
+
         bytes32 hashV;
         uint result;
 
@@ -101,6 +109,38 @@ contract VUSwap is HasNoEther, HasNoTokens {
         return OK;
     }
 
+    function cancel(
+        address[] addresses,
+        uint[] makerValues,
+        uint[] takerValues,
+        uint expiration,
+        uint nonce,
+        uint8 v, bytes32 r, bytes32 s)
+    public
+    returns (uint)
+    {
+        // Only maker is permited to fill an order
+        if (addresses[0] /*taker*/ != msg.sender) {
+            return ERROR_INVALID_MAKER;
+        }
+
+        bytes32 hashV;
+        uint result;
+
+        (result, hashV) = validate(addresses, makerValues, takerValues,
+                                   expiration, nonce, v, r, s);
+
+        if (result != OK) {
+            emit Failed(result, addresses[0], addresses[3]);
+            return result;
+        }
+
+        emit Canceled(addresses[0], addresses[1], addresses[2], addresses[3], addresses[4]);
+        fills[hashV] = true;
+
+        return OK;
+    }
+
     function validate(
         address[] addresses,
         uint[] makerValues,
@@ -112,11 +152,6 @@ contract VUSwap is HasNoEther, HasNoTokens {
     view
     returns (uint, bytes32)
     {
-        // Only sender is permited to fill an order
-        if (addresses[3] /*taker*/ != msg.sender) {
-            return (ERROR_INVALID_TAKER, 0x0);
-        }
-
         // Maker and taker sould not be the same
         if (addresses[0] /*maker*/ == addresses[3] /*taker*/) {
             return (ERROR_INVALID_ADDRESS, 0x0);
