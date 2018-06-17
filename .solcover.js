@@ -3,5 +3,5 @@ require('babel-polyfill');
 
 module.exports = {
   copyNodeModules: true,
-  skipFiles: ['migration/Migrations.sol'],
+  skipFiles: ['Migrations.sol', 'helpers/VUTokenMock.sol', 'lib/Strings.sol'],
 }
