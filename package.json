@@ -27,15 +27,19 @@
     },
     "homepage": "https://github.com/Ukledo/vu-world-smart-contracts#readme",
     "dependencies": {
+        "abi-decoder": "^1.0.9",
         "ganache-cli": "6.1.3",
+        "openzeppelin-solidity": "^1.10.0",
         "truffle": "4.1.11",
-        "abi-decoder": "^1.0.9"
+        "immersive-entertainment-contracts": "ukledo/vu.token.git"
     },
     "devDependencies": {
         "babel-polyfill": "^6.26.0",
         "babel-preset-env": "^1.6.1",
         "babel-preset-flow": "^6.23.0",
         "babel-register": "^6.26.0",
-        "solidity-coverage": "^0.5.4"
+        "solidity-coverage": "^0.5.4",
+        "ethereumjs-util": "^5.1.5",
+        "ethereumjs-abi": "^0.6.5"
     }
 }
