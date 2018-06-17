@@ -12,15 +12,15 @@ contract VUSwap is HasNoEther, HasNoTokens {
     uint constant OK = 1;
     /// @dev The makeAddress and takerAddress must be different
     uint constant ERROR_INVALID_ADDRESS = 1001;
-    /// @dev TODO
+    /// @dev If token is VUToken, values.len == 1
     uint constant ERROR_INVALID_VALUES = 1002;
-    /// @dev TODO
+    /// @dev Invalid signs
     uint constant ERROR_INVALID_SIGN = 1003;
     /// @dev The order has expired
     uint constant ERROR_EXPIRED = 1004;
-    /// @dev This order has already been filled
+    /// @dev Invalid taker address, only taker is permitted to execute 'trade'
     uint constant ERROR_INVALID_TAKER = 1005;
-    /// @dev This order has already been filled
+    /// @dev Invalid maker address, only maker is permitted to execute 'trade'
     uint constant ERROR_INVALID_MAKER = 1006;
     /// @dev Order has already been cancelled or filled
     uint constant ERROR_INVALID_FILL = 1007;
@@ -42,8 +42,8 @@ contract VUSwap is HasNoEther, HasNoTokens {
         address indexed taker,
         address takerToken);
 
-    ///@dev Event that is emitted when order is canceled.
-    event Canceled(
+    ///@dev Event that is emitted when order is cancelled.
+    event Cancelled(
         address indexed maker,
         address makerToken,
         address indexed makerReciever,
@@ -82,7 +82,7 @@ contract VUSwap is HasNoEther, HasNoTokens {
     public
     returns (uint)
     {
-        // Only sender is permited to fill an order
+        // Only sender is permitted to fill an order
         if (addresses[3] /*taker*/ != msg.sender) {
             return ERROR_INVALID_TAKER;
         }
@@ -119,7 +119,7 @@ contract VUSwap is HasNoEther, HasNoTokens {
     public
     returns (uint)
     {
-        // Only maker is permited to fill an order
+        // Only maker is permitted to fill an order
         if (addresses[0] /*taker*/ != msg.sender) {
             return ERROR_INVALID_MAKER;
         }
@@ -135,7 +135,7 @@ contract VUSwap is HasNoEther, HasNoTokens {
             return result;
         }
 
-        emit Canceled(addresses[0], addresses[1], addresses[2], addresses[3], addresses[4]);
+        emit Cancelled(addresses[0], addresses[1], addresses[2], addresses[3], addresses[4]);
         fills[hashV] = true;
 
         return OK;
@@ -152,22 +152,39 @@ contract VUSwap is HasNoEther, HasNoTokens {
     view
     returns (uint, bytes32)
     {
-        // Maker and taker sould not be the same
+        // maker and taker sould not be the same
         if (addresses[0] /*maker*/ == addresses[3] /*taker*/) {
             return (ERROR_INVALID_ADDRESS, 0x0);
         }
 
-        // Order should not be expired
+        // order should not be expired
         if (expiration < now) {
             return (ERROR_EXPIRED, 0x0);
         }
 
+        // VUItemToken should be either makerToken or takerToken
+        if (addresses[1] != address(vuItemToken) && addresses[4] != address(vuItemToken)) {
+            return (ERROR_INVALID_ADDRESS, 0x0);
+        }
+
+        // makerToken should be either VUItemToken or VUToken
+        if (addresses[1] != address(vuItemToken) && addresses[1] != address(vuToken)) {
+            return (ERROR_INVALID_ADDRESS, 0x0);
+        }
+
+        // takerToken should be either VUItemToken or VUToken
+        if (addresses[4] != address(vuItemToken) && addresses[4] != address(vuToken)) {
+            return (ERROR_INVALID_ADDRESS, 0x0);
+        }
+
         bytes32 hashV = hash(addresses, makerValues, takerValues, expiration, nonce);
 
+        // check if order is already filled or cancelled
         if (fills[hashV]) {
             return (ERROR_INVALID_FILL, 0x0);
         }
 
+        // check signs
         bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes32 prefixedHash = keccak256(prefix, hashV);
 
@@ -175,6 +192,7 @@ contract VUSwap is HasNoEther, HasNoTokens {
             return (ERROR_INVALID_SIGN, 0x0);
         }
 
+        // everything is correct
         return (OK, hashV);
     }
 
