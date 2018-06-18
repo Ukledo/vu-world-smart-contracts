@@ -31,7 +31,8 @@
         "ganache-cli": "6.1.3",
         "openzeppelin-solidity": "^1.10.0",
         "truffle": "4.1.11",
-        "immersive-entertainment-contracts": "ukledo/vu.token.git"
+        "immersive-entertainment-contracts": "ukledo/vu.token.git",
+        "truffle-hdwallet-provider": "mikefluff/truffle-hdwallet-provider#7a2eccca1ba17c235a3ef258914ca74ea5f13014"
     },
     "devDependencies": {
         "babel-polyfill": "^6.26.0",
