@@ -9,6 +9,7 @@ $ ganache-cli
 $ truffle migrate --development
 $ truffle console --development
 ```
+### Video recorded step #1:
 [![Video recorded step 1](http://img.youtube.com/vi/1bgQbX0fN10/0.jpg)](http://www.youtube.com/watch?v=1bgQbX0fN10 "Video recorded step 1")
 
 ## Step 2:
@@ -19,6 +20,7 @@ Steps to reproduce it, run these commands in the truffle console
 $ VUItemToken.at(VUItemToken.address).mint.call(web3.eth.accounts[4], 1, "hash1")
 $ VUItemToken.at(VUItemToken.address).mint.call(web3.eth.accounts[4], 2, "hash2")
 ```
+### Video recorded step #2:
 [![Video recorded step 2](http://img.youtube.com/vi/ALZ0sV17_LU/0.jpg)](http://www.youtube.com/watch?v=ALZ0sV17_LU "Video recorded step 2")
 
 ## Step 3:
@@ -31,7 +33,7 @@ $ web3.eth.accounts
 $ VUItemToken.at(VUItemToken.address).setApprovalForAll.call(VUSwap.address, true, {from: web3.eth.accounts[3]})
 $ VUTokenMock.at(VUTokenMock.address).approve.call(web3.eth.accounts[2], 5, {from: web3.eth.accounts[4]})
 ```
-
+### Video recorded step #3:
 [![Video recorded step 3](http://img.youtube.com/vi/rcsLDVDi5j4/0.jpg)](http://www.youtube.com/watch?v=rcsLDVDi5j4 "Video recorded step 3")
 
 
@@ -199,4 +201,5 @@ module.exports.sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 ```
+### Video recorded step #4:
 [![Video recorded step 4](http://img.youtube.com/vi/ntzSxtmPb7s/0.jpg)](http://www.youtube.com/watch?v=ntzSxtmPb7s "Video recorded step 4")
