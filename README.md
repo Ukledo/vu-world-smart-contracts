@@ -85,7 +85,7 @@ await vuToken.approve(user1, UINX_MAX, {from: seller})
 ```
 This step is optional, but strongly recommended. _Unlimited allowance_ simplifies trade workflow. Once performed, it decreases count of transactions needed for _swap_: only a single `buyer's` transaction should be performed to buy the tokens. `Seller` does not spend his ETH.
 
-### 3. Agree on the terms of an order
+### 2. Agree on the terms of an order
 Both, `seller` and `buyer` should agree on the terms of an order. It is off-chain computations, no gas required. Web site or/and desktop application could be used to help users make an agreement.
 
 There is an order structure:
@@ -101,14 +101,14 @@ order.expiration = new Date().getTime() + 60000; // expiration date
 order.nonce = 1; // nonce, should be incremented
 ```
 
-### 4. Sign
+### 3. Sign
 `Seller` should sign the order's data (off-chain, no gas required):
 ```
 const { v, r, s } = await signature(order, seller);
 ```
 Then, `seller` should share `{ v, r, s }` with `buyer`.
 
-### 5. Trade
+### 4. Trade
 `Buyer` should fill the order (i.e. execute transaction, gas required):
 ```
 let addresses = [order.maker, order.makerToken, order.makerReceiver, order.taker, order.takerToken];
@@ -120,7 +120,7 @@ let result = await vuSwap.fill(addresses,
                                 v, util.bufferToHex(r), util.bufferToHex(s), {from: buyer});
 
 ```
-### 6. Bingo!
+### 5. Bingo!
 Trade is done.
 
 ## Crowdsale
