@@ -132,6 +132,6 @@ There is a basic crowdsale workflow description
 5. Done.
 
 ## More
-If you want to know more about how to use it, please refer to this [example](docs/how-to-use-it.md).
+Example with videos available [here](docs/how-to-use-it.md).
 
 # Good luck!
