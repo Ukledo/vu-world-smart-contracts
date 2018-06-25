@@ -9,7 +9,8 @@ $ ganache-cli
 $ truffle migrate --development
 $ truffle console --development
 ```
-[Video recorded Step 1](https://www.useloom.com/share/f0ef046a4639481a98c14d8c202e38f7)
+### Video recorded step #1:
+[![Video recorded step 1](http://img.youtube.com/vi/1bgQbX0fN10/0.jpg)](http://www.youtube.com/watch?v=1bgQbX0fN10 "Video recorded step 1")
 
 ## Step 2:
 Minting items for one address and tokens for another address.
@@ -19,8 +20,8 @@ Steps to reproduce it, run these commands in the truffle console
 $ VUItemToken.at(VUItemToken.address).mint.call(web3.eth.accounts[4], 1, "hash1")
 $ VUItemToken.at(VUItemToken.address).mint.call(web3.eth.accounts[4], 2, "hash2")
 ```
-
-[Video recorded Step 2](https://www.useloom.com/share/f2acc12130f24e2b8bc465bb6c12376e)
+### Video recorded step #2:
+[![Video recorded step 2](http://img.youtube.com/vi/ALZ0sV17_LU/0.jpg)](http://www.youtube.com/watch?v=ALZ0sV17_LU "Video recorded step 2")
 
 ## Step 3:
 Make the "approvals".
@@ -32,8 +33,9 @@ $ web3.eth.accounts
 $ VUItemToken.at(VUItemToken.address).setApprovalForAll.call(VUSwap.address, true, {from: web3.eth.accounts[3]})
 $ VUTokenMock.at(VUTokenMock.address).approve.call(web3.eth.accounts[2], 5, {from: web3.eth.accounts[4]})
 ```
+### Video recorded step #3:
+[![Video recorded step 3](http://img.youtube.com/vi/rcsLDVDi5j4/0.jpg)](http://www.youtube.com/watch?v=rcsLDVDi5j4 "Video recorded step 3")
 
-[Video recorded Step 3](https://www.useloom.com/share/83b46b006e104ed08f86af1854cfaea5)
 
 ## Step 4:
 Create the order and sign the order.
@@ -199,5 +201,5 @@ module.exports.sleep = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 ```
-
-[Video recorded Step 4](https://www.useloom.com/share/2b216c50b9d34d999fb5c106cb231f5e)
+### Video recorded step #4:
+[![Video recorded step 4](http://img.youtube.com/vi/ntzSxtmPb7s/0.jpg)](http://www.youtube.com/watch?v=ntzSxtmPb7s "Video recorded step 4")
