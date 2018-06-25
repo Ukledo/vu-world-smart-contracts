@@ -120,7 +120,7 @@ contract VUSwap is HasNoEther, HasNoTokens {
     returns (uint)
     {
         // Only maker is permitted to fill an order
-        if (addresses[0] /*taker*/ != msg.sender) {
+        if (addresses[0] /*maker*/ != msg.sender) {
             return ERROR_INVALID_MAKER;
         }
 
