@@ -1,4 +1,4 @@
-# VU World Smart Contracts
+# VU World Smart Contracts [![Build Status](https://travis-ci.org/Ukledo/vu-world-smart-contracts.svg?branch=master)](https://travis-ci.org/Ukledo/vu-world-smart-contracts)
 
 ## Intro
 In the present article under consideration there are some vital user guidelines on compiling, deploying and managing the smart contracts of _VU Item Token_.
