@@ -1,10 +1,17 @@
-sudo: false
+sudo: required
 dist: trusty
 language: node_js
-node_js: 9
+node_js:
+  - '9'
 before_install:
-- export NODE_OPTIONS="--max_old_space_size=4096"
-- export PATH=$PATH:$(pwd)/node_modules/.bin
+  - export NODE_OPTIONS="--max_old_space_size=4096"
+  - export PATH=$PATH:$(pwd)/node_modules/.bin
+install:
+  - npm install
 script:
-- ganache-cli -g 1 > /dev/null &
-- truffle test
+  - npm test
+before_script:
+  - ganache-cli > /dev/null &
+  - sleep 5
+#after_script:
+#  - npm run coverage && cat coverage/lcov.info | coveralls
