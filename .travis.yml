@@ -13,5 +13,5 @@ script:
 before_script:
   - ganache-cli > /dev/null &
   - sleep 5
-#after_script:
-#  - npm run coverage && cat coverage/lcov.info | coveralls
+after_script:
+  - travis_wait 30 npm run coverage && cat coverage/lcov.info | coveralls
